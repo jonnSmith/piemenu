@@ -1,0 +1,398 @@
+/* Sass Document */
+
+$property: border-radius;
+$value: 10px;
+
+@import 'css3-mixins';
+@import 'flat-colors';
+@import '../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+@import '../node_modules/font-awesome/scss/font-awesome.scss';
+
+$color-blank: #FFF;
+$info_letters: ();
+$sector_colors: ();
+$border-circle: 4px solid $color-blank;
+
+$heading-color: #CCC;
+
+$heading-font: 'Open Sans';
+$radius: 150 !default;
+$circle-radius: $radius  * 1px;
+$logo-color: $flat-blue-1;
+$sectors: 8 !default;
+
+@for $i from 1 through $sectors {
+    $info_letters: join(15, $info_letters)
+}
+
+@for $i from 1 through $sectors {
+    $sector_colors: join(nth($flat-colors, $i), $sector_colors)
+}
+
+@mixin sector($radius, $color) {
+    width: $radius;
+    height: $radius;
+}
+
+@mixin fullsize() {
+    width: 100%;
+    height: 100%;
+}
+
+@mixin rotated-text($num-letters: 100, $angle-span: 180deg, $angle-offset: 0deg) {
+    $angle-per-char: $angle-span / $num-letters;
+    @for $i from 1 through $num-letters {
+        .char#{$i} {
+            @include rotate($angle-offset + $angle-per-char * $i);
+        }
+    }
+}
+
+@mixin css3-prefix($property: border-radius, $value: 10px) {
+    -webkit-#{$property}: #{$value};
+    -khtml-#{$property}: #{$value};
+    -moz-#{$property}: #{$value};
+    -ms-#{$property}: #{$value};
+    -o-#{$property}: #{$value};
+    #{$property}: #{$value};
+}
+
+@mixin triangle($dir, $size, $color) {
+    border: $size transparent solid;
+
+    @if ($dir == "top" or $dir == "up") {
+        border-bottom-color: $color;
+    }
+    @else if ($dir == "right" or $dir == "after") {
+          border-left-color: $color;
+    }
+    @else if ($dir == "bottom" or $dir == "down") {
+          border-top-color: $color;
+    }
+    @else if ($dir == "left" or $dir == "before") {
+          border-right-color: $color;
+    }
+  }
+
+html {
+    @include fullsize();
+}
+body {
+    @extend html;
+    max-width:100%;
+    max-height:100%;
+    overflow:hidden;
+}
+
+h1 {
+    color:$heading-color;
+    font-family:$heading-font;
+}
+
+h2, h3, h4, h5, h6 {
+    @extend h1;
+}
+
+.loader {
+    position:absolute;
+    @include fullsize();
+    top:0;
+    left:0;
+    background:#FFF;
+    z-index:100;
+    .loader-circle {
+        height: $circle-radius*3;
+        width: $circle-radius*3;
+        @include border-radius($circle-radius*3/2);
+        display:inline-block;
+        position:absolute;
+        top:50%;
+        left:50%;
+        margin: -$circle-radius*3/2 0 0 (-$circle-radius*3/2);
+        background: $flat-blue-1;
+    }
+}
+
+#wrapper {
+    position:relative;
+    @include fullsize();
+}
+
+.circle-wrapper {
+    height: $circle-radius*3;
+    width: $circle-radius*3;
+    @include border-radius($circle-radius*3/2);
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin: -$circle-radius*3/2 0 0 (-$circle-radius*3/2);
+    background: $color-blank;
+    overflow:hidden;
+}
+
+.circle {
+    @include sector($circle-radius,$heading-color);
+    position: relative; 
+    display:inline-block;
+    margin-top: $circle-radius;
+    margin-left: $circle-radius;
+    @include border-radius($circle-radius);
+    @include transition(all,1s,ease-out,0.5s);
+    .sector {
+        @include sector($circle-radius,$heading-color);
+        @include transition(all,0.5s,ease-out,0.5s);    
+        @include border-radius-separate($circle-radius*2, 0, 0, 0);
+        @include css3-prefix(transform-origin, 100% 100%);    
+        position: absolute;
+        height: $circle-radius*3/2;
+        width: $circle-radius*3/2;
+        border:1px solid $flat-gray-1;
+        cursor:pointer;        
+        top: -$circle-radius;
+        left: -$circle-radius;
+        @include css3-prefix(clip-path, polygon(0 $circle-radius*3/2,$circle-radius*3/2 $circle-radius*3/2,0 0));
+        i {
+            position:absolute;
+            top:75%;
+            left:25%;
+            width:20px;
+            height:20px;
+            margin:-25px 0 0 -20px;
+            font-size:20px;
+            @include rotate(-#{(360/$sectors)*3/2}deg);
+        }
+    }
+    .center-sector {
+        @include sector($circle-radius,$heading-color);
+        @include transition(all,1s,ease-out,0.5s);
+        @include border-radius($circle-radius);
+        @include box-sizing(content-box);
+        position:absolute;
+        margin-top:0;
+        margin-left:0;
+        background-color:$logo-color;
+        z-index:$sectors+3;
+        overflow:hidden;    
+        cursor:pointer;
+        .img {
+            position:absolute;
+            @include border-radius($circle-radius);
+            @include sector($circle-radius,$heading-color);
+            top:0;
+            left:0;
+            display:none;
+            img {
+                @include sector($circle-radius,$heading-color);
+                display:block;
+            }
+        }
+    }
+}
+
+.circle .center-sector.active {
+    @include transform(scale(2));
+}
+
+
+.circle_text {
+    @include rotated-text(8, 180deg, 0deg);
+    @include sector($circle-radius*2,$heading-color);    
+    span {
+        height: $circle-radius*2;
+        position: absolute;
+        width: 10px;
+        left: 0;
+        top: 0;
+        transform-origin: bottom center;    
+    }
+}
+
+@for $i from 1 through $sectors {
+
+    .sector:nth-child(#{$i}) {        
+        @include rotate(#{360/$sectors*($i - 1)}deg);
+        z-index:$i;
+        background-color: $color-blank;
+        i {
+            color:nth($sector_colors,$i);
+            z-index:$i+1;
+        }
+    }        
+    .sector:nth-child(#{$i}):hover {
+        background:nth($sector_colors,$i);
+        i{
+            color: $color-blank;    
+        }        
+    }
+    
+    .center-sector .img:nth-child(#{$i}) {
+        z-index:$sectors + 2 + $i;    
+    }
+
+}
+
+.sector:nth-child(#{$sectors}) {
+
+}
+
+.sector:first-child {
+    z-index:$sectors+1;
+}
+
+#centerLogo {
+    @include border-radius($circle-radius);
+    position:absolute;
+    top:0;
+    left:0;
+    height: $circle-radius;
+    width: $circle-radius;
+    max-height: 100%;
+    z-index:$sectors+2;
+    .logo-bg {
+        fill:$logo-color;
+    }
+    .logo-shadow {
+        fill:$flat-blue-2;
+    }
+    .logo-light {
+        fill:#34A7EF;
+    }
+    .logo-white {
+        fill: $color-blank;
+    }
+}
+
+.info-circle {
+    @extend .circle-wrapper;
+    z-index:$sectors + 4;
+    position:absolute;
+    top:$circle-radius*3;
+    left:$circle-radius*3;
+    width:0;
+    height:0;
+    @include transition(all,1s,ease-out,0.5s);    
+    @include css3-prefix(transform-origin, 50% 50%);
+    a.close-info {
+        width:0;
+        height:0;
+        position:absolute;
+        display:block;
+        top:0;
+        left:0;
+        background-color: $color-blank;
+        @include transition(all,1s,ease-out,0.5s);
+        @include css3-prefix(transform-origin, 100% 100%);
+        cursor:pointer;
+        text-decoration:none;
+        i {
+            @include transition(all,1s,ease-out,0.5s);
+            @include css3-prefix(transform-origin, 0 100%);
+            position:absolute;
+            top:0;
+            left:0;
+            width:0;
+            height:0;
+            text-decoration:none;
+            font-size:0;
+            line-height:20px;
+        }
+    }
+    p.rounded {
+        position:absolute;
+        top:0;
+        right:10px;
+        padding:0;
+        margin:0;
+        opacity: 0;
+        width:0;
+        height:0;
+        @include transition(all,1s,ease-out,0.5s);
+        span {
+            height: $circle-radius*3/2;
+            position: absolute;
+            display:block;    
+            width: 0;
+            font-size:20px;
+            text-transform:uppercase;
+            left: 0;
+            top: -50px;
+            transform-origin: bottom center;
+            color:$color-blank;
+            opacity: 0;
+            @include transition(all,1s,ease-out,0.5s);
+        }
+    }
+}
+
+.info-circle.active {
+    top:$circle-radius*3/2;
+    left:$circle-radius*3/2;
+    height: $circle-radius*3;
+    width: $circle-radius*3;
+    a.close-info {
+        @include border-radius(50px);
+        top:$circle-radius*3/2-25;
+        left:$circle-radius*3/2-25;
+        width:20px;
+        height:20px;
+        padding:30px;
+        i {
+            display:block;    
+            position:absolute;
+            top:15px;
+            left:15px;
+            width:30px;
+            height:30px;    
+            font-size:30px;
+            line-height:30px;            
+        }
+    }
+    p.rounded {
+        position:absolute;
+        top:0;
+        right:10px;
+        padding:0;
+        margin:0;
+        opacity: 1;
+        @include sector($circle-radius*3/2,$heading-color);
+        span {
+            height: $circle-radius*3/2;
+            position: absolute;
+            width: 20px;
+            font-size:20px;
+            text-transform:uppercase;
+            left: 0;
+            top: 0;
+            opacity: 1;
+            transform-origin: bottom center;
+            color:$color-blank;    
+        }
+    }
+}
+
+@for $i from 1 through $sectors {
+    .info-circle:nth-child(#{$i + 1}) {
+        background-color:nth($sector_colors,$i);
+        a.close-info i {    
+            color:nth($sector_colors,$i);
+        }
+        p.rounded {
+            @include rotated-text(nth($info_letters,$i), 90deg, -45deg);
+            span {
+
+            }
+        }
+    }
+    .info-circle.active:nth-child(#{$i + 1}) {
+        background-color:nth($sector_colors,$i);
+        a.close-info i {    
+            color:nth($sector_colors,$i);
+        }
+        p.rounded {
+            @include rotated-text(nth($info_letters,$i), 90deg, -45deg);
+            span {
+
+            }
+        }
+    }    
+}

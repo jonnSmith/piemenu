@@ -1,0 +1,36 @@
+doctype html
+html(lang="ru")
+    head
+        title #{title}
+        link(rel='stylesheet', href='./assets/styles/styles.css')
+        link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Open+Sans")       
+    body
+        .loader.text-center
+            .loader-circle
+        #wrapper
+            .circle-wrapper
+                .circle
+                    - for (var x = 0; x < parts ; x++)
+                        .sector(style="clip-path:url(#halfLeft);")
+                            i(class="fa #{icons[x]}")
+                    .center-sector
+                        - for (var x = 0; x < parts; x++)
+                            .img
+                                img(src="#{images[x]}" class="img-center")
+                        svg(xmlns="http://www.w3.org/2000/svg", id="centerLogo")
+                            defs
+                                clippath#halfLeft(clipPathUnits="objectBoundingBox")
+                                    polygon(points="0 #{radius*3/2},#{radius*3/2} #{radius*3/2}, 0 0")
+                            rect(class="logo-bg", width="150", height="150")
+                            polygon(class="logo-shadow", points="127.3,43.5 85,43.5 85,49.5 79.3,43.5 38,43.5 38,106.3 77.5,150 150,150 150,69.9")
+                            g
+                                path(class="logo-light", d="M4.4 43.6H13l5.4 11.6l5.4-11.6h8.6l-9.8 19.3v12.7h-8.3V62.9L4.4 43.6L4.4 43.6z")
+                                path(class="logo-white", d="M79.3 57.1H51.5v11.2h14.2v13.5H51.5v11.2h27.8v13.5H38V43.6h41.3V57.1z")
+                                path(class="logo-white", d="M127.1 87.6H98.4v18.8H84.9V43.6h42.2V87.6z M98.4 74.1h15.3v-17H98.4V74.1z")
+                                path(class="logo-light", d="M132.7 43.6h12.9l-1.3 43.1H134L132.7 43.6z M145.6 93.5v12.9h-12.9V93.5H145.6z")
+                - for (var x = 0; x < parts; x++)
+                    .info-circle
+                        p.rounded.lettering.text-center eugen pushkarof
+                        a.close-info.text-center
+                            i.fa.fa-times-circle-o
+        script(src='./assets/scripts/scripts.js')
