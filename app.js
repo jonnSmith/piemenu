@@ -16,6 +16,14 @@ app.use(logger('dev'));
 app.get('/', function (req, res) {
     let sectors = parseInt(req.query.s) ? parseInt(req.query.s) : 8;
     let radius = parseInt(req.query.r) ? parseInt(req.query.r) : 150;
+    let points;
+    if(sectors === 8) {
+        points = '0,0 0,0';
+    } else if(sectors < 8) {
+        points = '0.5,0 0,0'
+    } else {
+        points = '0,0 0.5,0';
+    }
     let images = [];
     for (let k = 200; k > 15; k = k - 5) {
         images.push('http://placehold.it/' + k * 10 + 'x' + k * 10);
@@ -34,6 +42,7 @@ app.get('/', function (req, res) {
             res.render('index', {
                 title: 'PieMenu',
                 radius: radius,
+                points: points,
                 parts: sectors,
                 icons: icons.sort(_ => .5 - Math.random()),
                 images: images.sort(_ => .5 - Math.random())

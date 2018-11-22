@@ -11,7 +11,7 @@ html(lang="ru")
             .circle-wrapper
                 .circle
                     - for (var x = 0; x < parts ; x++)
-                        .sector(style="clip-path:url(#halfLeft);")
+                        .sector(style="#{ x ? '' : 'clip-path:url(#halfLeft);' }")
                             i(class="fa #{icons[x]}")
                     .center-sector
                         - for (var x = 0; x < parts; x++)
@@ -20,8 +20,8 @@ html(lang="ru")
                         svg(xmlns="http://www.w3.org/2000/svg", id="centerLogo")
                             defs
                                 clippath#halfLeft(clipPathUnits="objectBoundingBox")
-                                    polygon(points="0 #{radius*3/2},#{radius*3/2} #{radius*3/2}, 0 0")
-                            rect(class="logo-bg", width="150", height="150")
+                                    polygon(points="#{points} 0,1 1,1 1,1")
+                            rect(class="logo-bg", width="100%", height="100%")
                             polygon(class="logo-shadow", points="127.3,43.5 85,43.5 85,49.5 79.3,43.5 38,43.5 38,106.3 77.5,150 150,150 150,69.9")
                             g
                                 path(class="logo-light", d="M4.4 43.6H13l5.4 11.6l5.4-11.6h8.6l-9.8 19.3v12.7h-8.3V62.9L4.4 43.6L4.4 43.6z")
